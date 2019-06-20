@@ -8,6 +8,11 @@ async def get_all_users_method(request):
     return json(users, status=200)
 
 
+async def get_user_by_id_method(request, user_id):
+    user = await db_api.get_user_by_id(user_id)
+    return json(user, status=200)
+
+
 async def update_user_by_id_method(request, user_id):
     user = db_api.update_user_by_id(user_id, request.json)
     return json(user, status=200)
@@ -16,11 +21,6 @@ async def update_user_by_id_method(request, user_id):
 async def add_user_method(request):
     user = await db_api.add_user(request.json)
     return json(user, status=201)
-
-
-async def get_user_by_id_method(request, user_id):
-    user = await db_api.get_user_by_id(user_id)
-    return json(user, status=200)
 
 
 async def delete_user_by_id_method(request, user_id):
