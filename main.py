@@ -1,7 +1,7 @@
 from sanic import Sanic
 from sanic.response import json
 from sanic.exceptions import NotFound, InvalidUsage
-# from sanic_openapi import swagger_blueprint
+from sanic_openapi import swagger_blueprint
 
 from app.api.blueprint_group import api_blueprint_group
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     web_app.error_handler.add(InvalidUsage, error_400_handler)
     web_app.error_handler.add(Exception, server_error_handler)
 
-    # web_app.blueprint(swagger_blueprint)
+    web_app.blueprint(swagger_blueprint)
 
     web_app.config.API_VERSION = '1.0.0'
     web_app.config.API_TITLE = 'Summer Sanic'
