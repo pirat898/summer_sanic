@@ -2,10 +2,9 @@ from sanic import Sanic
 from sanic.response import json
 from sanic.exceptions import NotFound, InvalidUsage
 # from sanic_openapi import swagger_blueprint
-from sanic_transmute import add_swagger, add_route
+# from sanic_transmute import add_swagger, add_route
 
 from app.api.blueprint_group import api_blueprint_group
-from app.api.v5.users import add_user_method
 
 
 async def before_server_start(app, loop):
@@ -39,7 +38,7 @@ if __name__ == "__main__":
     web_app.error_handler.add(InvalidUsage, error_400_handler)
     web_app.error_handler.add(Exception, server_error_handler)
 
-    add_swagger(web_app, "/swagger.json", "swagger")
+    # add_swagger(web_app, "/swagger.json", "swagger")
 
     # web_app.blueprint(swagger_blueprint)
     # web_app.config.API_VERSION = '1.0.0'

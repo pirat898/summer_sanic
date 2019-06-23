@@ -34,7 +34,7 @@ async def update_user_by_id_method(request, user_id):
 
 @describe(paths="/users", methods="POST", body_parameters=['name', 'age', 'phone'],
           parameter_descriptions={'name': 'nnn', 'age': 'aaa', 'phone': 'ppp'})
-async def add_user_method(request, **kwargs) -> User:
+async def add_user_method(request, name: str, age: int, phone: str) -> User:
     user = User(request.json, strict=True)
     try:
         user.validate()
