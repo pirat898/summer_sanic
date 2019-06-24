@@ -15,8 +15,7 @@ class BaseHTTPMethodView(HTTPMethodView):
 
     async def dispatch_request(self, request, *args, **kwargs):
         self.load_input(request)
-        handler_coroutine = super().dispatch_request(request, *args, **kwargs)
-        result = await handler_coroutine
+        result = await super().dispatch_request(request, *args, **kwargs)
         return self.serialize_result(result)
 
     def load_input(self, request):

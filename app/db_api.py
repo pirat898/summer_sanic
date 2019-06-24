@@ -33,7 +33,8 @@ async def update_user_by_id(user_id, user_data):
         async with conn.cursor(cursor_factory=DictCursor) as cur:
             await cur.execute(query, params)
             data = await cur.fetchone()
-            return dict(data)
+            if data:
+                return dict(data)
 
 
 async def add_user(user_data):
