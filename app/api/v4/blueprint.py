@@ -4,7 +4,7 @@ from app.api.v4.users import get_all_users_method, update_user_by_id_method, add
     delete_user_by_id_method
 
 
-api_v4_blueprint = Blueprint('api_v4', url_prefix='/v4', strict_slashes=True)
+api_v4_blueprint = Blueprint('api_v4', url_prefix='/v4')
 
 api_v4_blueprint.add_route(get_all_users_method, uri='/users', methods=['GET'])
 api_v4_blueprint.add_route(get_user_by_id_method, uri='/users/<user_id>', methods=['GET'])

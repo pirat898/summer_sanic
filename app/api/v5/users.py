@@ -1,7 +1,7 @@
 from sanic.exceptions import NotFound
 from sanic_transmute import describe
 
-from app.api.models.user import UserById, InputUser, OutputUser
+from app.api.models.user import InputUser, OutputUser
 from app import db_api
 
 
@@ -16,17 +16,16 @@ async def get_all_users_method(request) -> [OutputUser]:
           tags=['users'], )
 async def get_user_by_id_method(request, user_id: int) -> OutputUser:
     """Get user by id"""
-    user = await db_api.get_user_by_id(UserById({'user_id': user_id}).user_id)
+    user = await db_api.get_user_by_id(user_id)
     if user:
         return OutputUser(user, strict=False)
     raise NotFound(f'User with id {user_id} not found')
 
 
-@describe(paths="/users/{user_id}", methods="PUT", parameter_descriptions={'user_id': 'id of user to update'},
-          tags=['users'])
+@describe(paths="/users/{user_id}", methods="PUT", tags=['users'],
+          parameter_descriptions={'user_id': 'id of user to update'})
 async def update_user_by_id_method(request, user_id: int, user: InputUser) -> OutputUser:
     """Update user info by id"""
-    user_id = UserById({'user_id': user_id}).user_id
     user = await db_api.update_user_by_id(user_id, user.to_native())
     return OutputUser(user, strict=False)
 
