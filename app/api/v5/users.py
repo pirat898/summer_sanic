@@ -1,50 +1,48 @@
-from sanic.response import json
-from sanic.exceptions import NotFound, InvalidUsage
-from schematics.exceptions import BaseError
-from sanic_transmute import describe, add_route, add_swagger, APIException
-from app.api.v4.models.user import UserById, User
+from sanic.exceptions import NotFound
+from sanic_transmute import describe
+from transmute_core.exceptions import APIException
+
+from app.api.models.user import UserById, InputUser, OutputUser, SanicError
 from app import db_api
 
 
-@describe(paths="/users", methods="GET")
-async def get_all_users_method(request) -> [User]:
+@describe(paths="/users", methods="GET", tags=['users'])
+async def get_all_users_method(request) -> [OutputUser]:
+    """Get all users"""
     users = await db_api.get_all_users()
-    return users
+    return [OutputUser(user, strict=False).to_primitive() for user in users]
 
 
-@describe(paths="/users/{user_id}", methods="GET")
-async def get_user_by_id_method(request, user_id: int) -> User:
+@describe(paths="/users/{user_id}", methods="GET", parameter_descriptions={'user_id': 'id of user to get'},
+          tags=['users'], )
+          # response_types={404: {'type': SanicError, 'type_description': 'fffff', 'description': 'User not found'}})
+async def get_user_by_id_method(request, user_id: int) -> OutputUser:
+    """Get user by id"""
     user = await db_api.get_user_by_id(UserById({'user_id': user_id}).user_id)
     if user:
-        return user
+        return OutputUser(user, strict=False).to_primitive()
     raise NotFound(f'User with id {user_id} not found')
 
 
-async def update_user_by_id_method(request, user_id):
+@describe(paths="/users/{user_id}", methods="PUT", parameter_descriptions={'user_id': 'id of user to update'},
+          tags=['users'])
+async def update_user_by_id_method(request, user_id: int, user: InputUser) -> OutputUser:
+    """Update user info by id"""
     user_id = UserById({'user_id': user_id}).user_id
-    user = User(request.json, strict=True)
-    try:
-        user.validate()
-    except BaseError as ex:
-        raise InvalidUsage(f'Error in data: {ex.to_primitive()}')
-
-    user = db_api.update_user_by_id(user_id, user.to_native())
-    return json(user, status=200)
+    user = await db_api.update_user_by_id(user_id, user.to_native())
+    return OutputUser(user, strict=False).to_primitive()
 
 
-@describe(paths="/users", methods="POST", body_parameters=['name', 'age', 'phone'],
-          parameter_descriptions={'name': 'nnn', 'age': 'aaa', 'phone': 'ppp'})
-async def add_user_method(request, name: str, age: int, phone: str) -> User:
-    user = User(request.json, strict=True)
-    try:
-        user.validate()
-    except BaseError as ex:
-        raise InvalidUsage(f'Error in data: {ex.to_primitive()}')
-
+@describe(paths='/users', methods="POST", success_code=201, tags=['users'])
+async def add_user_method(request, user: InputUser) -> OutputUser:
+    """Add new user"""
     user = await db_api.add_user(user.to_native())
-    return user
+    return OutputUser(user, strict=False).to_primitive()
 
 
-async def delete_user_by_id_method(request, user_id):
+@describe(paths='/users/{user_id}', methods="DELETE", parameter_descriptions={'user_id': 'id of user to delete'},
+          success_code=204, tags=['users'])
+async def delete_user_by_id_method(request, user_id: int) -> None:
+    """Delete user by id"""
     await db_api.delete_user_by_id(UserById({'user_id': user_id}).user_id)
-    return json({}, status=204)
+    return None

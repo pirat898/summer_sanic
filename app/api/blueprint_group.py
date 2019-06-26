@@ -13,8 +13,8 @@ api_blueprint_group = Blueprint.group([
     # api_v2_blueprint,
     # api_v3_blueprint,
     # api_v4_blueprint,
-    # api_v5_blueprint,
-    api_v6_blueprint,
+    api_v5_blueprint,
+    # api_v6_blueprint,
     api_v7_blueprint,
 ],
     url_prefix='/api')
