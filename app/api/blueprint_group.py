@@ -10,8 +10,8 @@ from app.api.v7.blueprint import api_v7_blueprint
 
 api_blueprint_group = Blueprint.group([
     # api_v1_blueprint,
-    # api_v2_blueprint,
-    # api_v3_blueprint,
+    api_v2_blueprint,
+    api_v3_blueprint,
     # api_v4_blueprint,
     api_v5_blueprint,
     # api_v6_blueprint,

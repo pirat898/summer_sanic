@@ -14,7 +14,7 @@ async def get_user_by_id_method(request, user_id):
 
 
 async def update_user_by_id_method(request, user_id):
-    user = db_api.update_user_by_id(user_id, request.json)
+    user = await db_api.update_user_by_id(user_id, request.json)
     return json(user, status=200)
 
 
@@ -25,4 +25,4 @@ async def add_user_method(request):
 
 async def delete_user_by_id_method(request, user_id):
     await db_api.delete_user_by_id(user_id)
-    return json({}, status=204)
+    return json(None, status=204)
