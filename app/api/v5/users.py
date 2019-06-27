@@ -9,7 +9,7 @@ from app import db_api
 async def get_all_users_method(request) -> [OutputUser]:
     """Get all users"""
     users = await db_api.get_all_users()
-    return [OutputUser(user, strict=False) for user in users]
+    return users
 
 
 @describe(paths="/users/{user_id}", methods="GET", parameter_descriptions={'user_id': 'id of user to get'},
@@ -18,7 +18,7 @@ async def get_user_by_id_method(request, user_id: int) -> OutputUser:
     """Get user by id"""
     user = await db_api.get_user_by_id(user_id)
     if user:
-        return OutputUser(user, strict=False)
+        return user
     raise NotFound(f'User with id {user_id} not found')
 
 
@@ -27,14 +27,14 @@ async def get_user_by_id_method(request, user_id: int) -> OutputUser:
 async def update_user_by_id_method(request, user_id: int, user: InputUser) -> OutputUser:
     """Update user info by id"""
     user = await db_api.update_user_by_id(user_id, user.to_native())
-    return OutputUser(user, strict=False)
+    return user
 
 
 @describe(paths='/users', methods="POST", success_code=201, tags=['users'])
 async def add_user_method(request, user: InputUser) -> OutputUser:
     """Add new user"""
     user = await db_api.add_user(user.to_native())
-    return OutputUser(user, strict=False)
+    return user
 
 
 @describe(paths='/users/{user_id}', methods="DELETE", parameter_descriptions={'user_id': 'id of user to delete'},
