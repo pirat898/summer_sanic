@@ -1,6 +1,7 @@
 from sanic import Sanic
 from sanic.response import json
 from sanic.exceptions import NotFound, InvalidUsage
+from schematics.exceptions import BaseError
 # from sanic_openapi import swagger_blueprint, doc
 from sanic_transmute import add_swagger, add_route
 
@@ -16,9 +17,10 @@ def sanic_error_handler(status):
 web_app = Sanic()
 
 web_app.blueprint(api_blueprint_group)
-# web_app.error_handler.add(NotFound, sanic_error_handler(404))
-# web_app.error_handler.add(InvalidUsage, sanic_error_handler(400))
-# web_app.error_handler.add(Exception, sanic_error_handler(500))
+web_app.error_handler.add(BaseError, sanic_error_handler(400))
+web_app.error_handler.add(NotFound, sanic_error_handler(404))
+web_app.error_handler.add(InvalidUsage, sanic_error_handler(400))
+web_app.error_handler.add(Exception, sanic_error_handler(500))
 
 
 # web_app.blueprint(swagger_blueprint)

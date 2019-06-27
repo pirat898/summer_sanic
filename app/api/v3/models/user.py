@@ -6,7 +6,3 @@ class User(Model):
     age = types.IntType(min_value=0, max_value=99)
     name = types.StringType(required=True)
     phone = types.StringType(regex=r'^\d{10}$')
-
-
-class UserById(Model):
-    user_id = types.IntType(required=True)
